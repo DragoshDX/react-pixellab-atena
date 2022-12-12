@@ -25,7 +25,7 @@ export const render = (contact) => {
 
     <button title="Add Pet"
       type="button"
-      class="btn btn-secondary"
+      class="btn btn-secondary add-pet-button"
     >Add Pet</button>
     `;
 
