@@ -4,6 +4,7 @@ import {
   createPet,
   deleteContact,
   findContact,
+  updateContact,
 } from './query.js';
 import createMessage from './message.js';
 import { render as renderEditContact } from './editContact.js';
@@ -114,14 +115,12 @@ stage.addEventListener('submit', (event) => {
   const contactId = id.value;
   const contact = findContact(contactId);
 
-  if (!contact) {
-    return;
-  }
-
-  contact.name = name.value;
-  contact.surname = surname.value;
-  contact.phone = phone.value;
-  contact.email = email.value;
+  updateContact(contactId, {
+    name: name.value,
+    surname: surname.value,
+    phone: phone.value,
+    email: email.value,
+  });
 
   stage.innerHTML = '';
   clearMessages();
