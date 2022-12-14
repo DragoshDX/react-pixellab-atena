@@ -31,3 +31,40 @@ const person = {
     },
   ],
 };
+
+console.warn(`
+  Folosind obiectul person si reduce, afiseaza
+  in consola un string care contine skill-urile de pe
+  pozitiile pare ale arrayului, separate prin virgula
+`);
+const skillArray1 = person.skills.reduce((skillArray1, skill, index) => {
+  if (index % 2 === 0) {
+    skillArray1.push(skill);
+  }
+
+  return skillArray1;
+}, []);
+console.log(skillArray1.toString());
+
+console.warn(`
+  In mod similar, afiseaza skill-urile care NU incep cu j.
+`);
+const skillArray2 = person.skills.reduce((skillArray2, skill) => {
+  if (!skill.toLowerCase().startsWith('j')) {
+    skillArray2.push(skill);
+  }
+
+  return skillArray2;
+}, []);
+console.log(skillArray2.join(' - '));
+
+console.warn(`
+  Folosind reduce afiseaza propozitia:
+  "Prietenii mei se numesc xxx yyy, xxx yyy, xxx yyy."
+`);
+const message1 = person.friends.reduce((message1, { name, surname }) => {
+  message1 += `${name} ${surname},`;
+
+  return message1;
+}, 'Prietenii mei se numesc ');
+console.log(message1);
