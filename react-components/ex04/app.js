@@ -7,6 +7,8 @@ const person = {
     html: true,
     css: true,
     javaScript: true,
+    'c#': false,
+    'c++': false,
   },
   friends: {
     larry: {
@@ -27,5 +29,40 @@ const person = {
   },
 };
 
+console.warn(`
+  Folosind Object.entries() pe proprietatea skills, afiseaza abilitatile
+  persoanei daca acestea sunt true.
+  Folosind propozitii de forma: “person.name cunoaste: html.” “person.name cunoaste: javaScript.”
+`);
+// [['html', true], ['css', true], ['javaScript', true]]
+const message1 = Object.entries(person.skills)
+  .reduce((message1, skillPair) => {
+    // const skillName = skillPair[0];
+    // const skillIsKnown = skillPair[1];
+    const [skillName, skillIsKnown] = skillPair;
 
+    if (skillIsKnown) {
+      message1 += `${person.name} cunoaste: ${skillName}. `;
+    }
 
+    return message1;
+  }, '')
+  .trim();
+console.log(message1);
+
+console.warn(`
+  Prin aceeasi metoda, afiseaza o lista inversata cu numele complet inversat al prietenilor.
+`);
+Object.entries(person.friends)
+  .reverse()
+  .forEach((friendPair) => {
+    const [, friend] = friendPair;
+    // const friend = friendPair[1];
+    const { name, surname } = friend;
+
+    console.log(`${surname} ${name}`);
+  });
+
+console.warn(`
+  Afiseaza propozitia: “Prietenii mei sunt Larry, Steven si Carol.” folosind Object.entries()
+`);
