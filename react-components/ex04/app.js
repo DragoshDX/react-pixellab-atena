@@ -66,3 +66,41 @@ Object.entries(person.friends)
 console.warn(`
   Afiseaza propozitia: “Prietenii mei sunt Larry, Steven si Carol.” folosind Object.entries()
 `);
+const message2 = Object.entries(person.friends).reduce(
+  (message2, friendPair, index, friends) => {
+    const [, friend] = friendPair;
+    const { name } = friend;
+    const friendsLength = friends.length;
+    let punctuation = ', ';
+
+    if (index === friendsLength - 1) {
+      punctuation = '.';
+    }
+
+    if (index === friendsLength - 2) {
+      punctuation = ' si ';
+    }
+
+    message2 += `${name}${punctuation}`;
+
+    return message2;
+  },
+  'Prietenii mei sunt ',
+);
+console.log(message2);
+
+console.warn(`
+  In mod similar afiseaza mai multe propozitii (cate una per console.log())
+  care sa afiseze: “Diferenta de varsta intre Larry si Dragos este de xxx ani.” etc…
+`);
+const friendPairs = Object.entries(person.friends);
+for (let i = 0; i < friendPairs.length; i++) {
+  const [, { name, age }] = friendPairs[i];
+  const diff = person.age - age;
+
+  console.log(
+    `Diferenta de varsta intre ${name} si ${person.name} este de ${diff} ani.${
+      i === friendPairs.length - 1 ? '' : ' '
+    }`,
+  );
+}
