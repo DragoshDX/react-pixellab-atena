@@ -2,6 +2,10 @@ class NewsletterForm extends React.Component {
   // state v1
   state = {
     email: '',
+    formMessage: '',
+    busy: false,
+    submitted: false,
+    successMessage: '',
   };
 
   validateEmail(email) {
@@ -13,6 +17,33 @@ class NewsletterForm extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault();
+    // event.target['field-newsletter'].value
+    const email = this.state.email;
+
+    this.setState({
+      formMessage: '',
+    });
+
+    if (!this.validateEmail(email)) {
+      this.setState({
+        formMessage: 'Please use a valid email',
+      });
+
+      return;
+    }
+
+    this.setState({
+      busy: true,
+    });
+
+    setTimeout(() => {
+      this.setState({
+        busy: false,
+        email: '',
+        submitted: true,
+        successMessage: `${this.state.email} subscrbied!`,
+      });
+    }, 3000);
   };
 
   onInputChange = (event) => {
@@ -26,6 +57,10 @@ class NewsletterForm extends React.Component {
   };
 
   render() {
+    if (this.state.submitted) {
+      return <div className="container">{this.state.successMessage}</div>;
+    }
+
     return (
       <form className="form-newsletter container" onSubmit={this.onSubmit}>
         <label htmlFor="field-newsletter">
@@ -39,7 +74,11 @@ class NewsletterForm extends React.Component {
           onChange={this.onInputChange}
           placeholder="enter your email address to receive the latest news!"
         ></input>
-        <button>Subscribe</button>
+        <button type="submit">
+          {this.state.busy ? '...loading' : 'Subscribe'}
+        </button>
+
+        <div className="form-message">{this.state.formMessage}</div>
       </form>
     );
   }

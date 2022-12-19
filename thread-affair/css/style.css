@@ -641,6 +641,7 @@ a {
   align-items: center;
   color: #fff;
   display: flex;
+  flex-wrap: wrap;
   min-height: 150px;
 }
 
@@ -678,6 +679,11 @@ a {
   height: 60px;
   background: url('./../images/icons/mail-send.png') no-repeat center right;
   background-size: 65px;
+}
+
+.home-newsletter .form-message {
+  width: 100%;
+  text-align: center;
 }
 
 .footer-top {
