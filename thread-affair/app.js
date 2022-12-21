@@ -1,4 +1,5 @@
 const ADD_TO_CART_EVENT = 'cart/productAdded';
+const REMOVE_FROM_CART_EVENT = 'cart/productRemoved';
 
 class NewsletterForm extends React.Component {
   // state v1
@@ -109,11 +110,14 @@ class AddToCartButton extends React.Component {
 
     setTimeout(() => {
       dispatchEvent(
-        new CustomEvent(ADD_TO_CART_EVENT, {
-          detail: {
-            productId: this.props.productId,
+        new CustomEvent(
+          this.state.inCart ? REMOVE_FROM_CART_EVENT : ADD_TO_CART_EVENT,
+          {
+            detail: {
+              productId: this.props.productId,
+            },
           },
-        }),
+        ),
       );
 
       this.setState({
@@ -176,12 +180,21 @@ class CartCounter extends React.Component {
           cartItemsCount: this.state.cartItemsCount + 1,
         });
         break;
+      case REMOVE_FROM_CART_EVENT:
+        this.setState({
+          cartItemsCount: this.state.cartItemsCount - 1,
+          cartItems: cartItems.filter((productId) => {
+            return productId !== detail.productId;
+          }),
+        });
+        break;
     }
   };
 
   componentDidMount() {
     // DOM
     addEventListener(ADD_TO_CART_EVENT, this.productCartAction);
+    addEventListener(REMOVE_FROM_CART_EVENT, this.productCartAction);
   }
 
   render() {
