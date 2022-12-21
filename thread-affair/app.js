@@ -1,5 +1,7 @@
 const ADD_TO_CART_EVENT = 'cart/productAdded';
 const REMOVE_FROM_CART_EVENT = 'cart/productRemoved';
+const ADD_TO_WL_EVENT = 'wl/productAdded';
+const REMOVE_FROM_WL_EVENT = 'wl/productRemoved';
 
 class NewsletterForm extends React.Component {
   // state v1
@@ -138,7 +140,59 @@ class AddToCartButton extends React.Component {
         className={`product-control ${productInCart ? 'in-cart' : ''}`}
         disabled={this.state.busy}
       >
-        {productInCart ? `Product ${this.props.productId}` : 'Add to cart'}
+        {productInCart
+          ? `Product ${this.props.productId} in cart`
+          : 'Add to cart'}
+        {this.state.busy ? <i className="fas fa-spinner"></i> : <></>}
+      </button>
+    );
+  }
+}
+
+class AddToWishlistButton extends React.Component {
+  state = {
+    inWl: false,
+    busy: false,
+  };
+
+  onClick = () => {
+    this.setState({
+      busy: true,
+    });
+
+    setTimeout(() => {
+      dispatchEvent(
+        new CustomEvent(
+          this.state.inWl ? REMOVE_FROM_WL_EVENT : ADD_TO_WL_EVENT,
+          {
+            detail: {
+              productId: this.props.productId,
+            },
+          },
+        ),
+      );
+
+      this.setState({
+        busy: false,
+        inWl: !this.state.inWl,
+      });
+    }, 6000);
+  };
+
+  render() {
+    const productInWl = this.state.inWl;
+
+    return (
+      <button
+        onClick={this.onClick}
+        type="button"
+        title={`${productInWl ? 'Remove' : 'Add'} product to wishlist`}
+        className={`product-control ${productInWl ? 'in-cart' : ''}`}
+        disabled={this.state.busy}
+      >
+        {productInWl
+          ? `Product ${this.props.productId} in wl`
+          : 'Add to wishlist'}
         {this.state.busy ? <i className="fas fa-spinner"></i> : <></>}
       </button>
     );
@@ -147,7 +201,14 @@ class AddToCartButton extends React.Component {
 
 class ProductTileControls extends React.Component {
   render() {
-    return <AddToCartButton productId={this.props.productId}></AddToCartButton>;
+    return (
+      <>
+        <AddToCartButton productId={this.props.productId}></AddToCartButton>
+        <AddToWishlistButton
+          productId={this.props.productId}
+        ></AddToWishlistButton>
+      </>
+    );
   }
 }
 const productTileControls = document.querySelectorAll('.product-tile-controls');
