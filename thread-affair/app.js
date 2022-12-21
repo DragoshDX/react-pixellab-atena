@@ -104,9 +104,15 @@ class AddToCartButton extends React.Component {
       busy: true,
     });
 
-    console.log('shouldrun once');
-
     setTimeout(() => {
+      dispatchEvent(
+        new CustomEvent('cart/productAdded', {
+          detail: {
+            productId: this.props.productId,
+          },
+        }),
+      );
+
       this.setState({
         busy: false,
       });
@@ -131,12 +137,12 @@ class AddToCartButton extends React.Component {
 
 class ProductTileControls extends React.Component {
   render() {
-    return <AddToCartButton></AddToCartButton>;
+    return <AddToCartButton productId={this.props.productId}></AddToCartButton>;
   }
 }
 const productTileControls = document.querySelectorAll('.product-tile-controls');
-productTileControls.forEach((productTileControl) => {
+productTileControls.forEach((productTileControl, index) => {
   ReactDOM.createRoot(productTileControl).render(
-    <ProductTileControls></ProductTileControls>,
+    <ProductTileControls productId={index}></ProductTileControls>,
   );
 });
