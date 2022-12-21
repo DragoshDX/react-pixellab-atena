@@ -137,7 +137,7 @@ class AddToCartButton extends React.Component {
         onClick={this.onClick}
         type="button"
         title={`${productInCart ? 'Remove' : 'Add'} product to cart`}
-        className={`product-control ${productInCart ? 'in-cart' : ''}`}
+        className={`product-control ${productInCart ? 'added' : ''}`}
         disabled={this.state.busy}
       >
         {productInCart
@@ -187,7 +187,7 @@ class AddToWishlistButton extends React.Component {
         onClick={this.onClick}
         type="button"
         title={`${productInWl ? 'Remove' : 'Add'} product to wishlist`}
-        className={`product-control ${productInWl ? 'in-cart' : ''}`}
+        className={`product-control ${productInWl ? 'added' : ''}`}
         disabled={this.state.busy}
       >
         {productInWl
@@ -261,13 +261,13 @@ class CartCounter extends React.Component {
   render() {
     return (
       <div
-        className="header-cart"
+        className="header-counter"
         onClick={() => {
           alert(this.state.cartItems);
         }}
       >
         {this.state.cartItemsCount > 0 ? (
-          <span className="cart-qty">{this.state.cartItemsCount}</span>
+          <span className="qty">{this.state.cartItemsCount}</span>
         ) : (
           <></>
         )}
@@ -277,9 +277,72 @@ class CartCounter extends React.Component {
   }
 }
 
+class WishlistCounter extends React.Component {
+  state = {
+    items: [],
+    itemCount: 0,
+  };
+
+  wishlistAction = (event) => {
+    const { detail, type: eventType } = event;
+    const { productId } = detail;
+
+    if (eventType === ADD_TO_WL_EVENT) {
+      // slice clones
+      const items = this.state.items.slice();
+      items.push(productId);
+
+      this.setState({
+        items,
+        itemCount: this.state.itemCount + 1,
+      });
+
+      return;
+    }
+
+    if (eventType === REMOVE_FROM_WL_EVENT) {
+      this.setState({
+        // filter clones
+        items: this.state.items.filter((productId) => {
+          return productId !== detail.productId;
+        }),
+        itemCount: this.state.itemCount - 1,
+      });
+
+      return;
+    }
+  };
+
+  componentDidMount() {
+    addEventListener(ADD_TO_WL_EVENT, this.wishlistAction);
+    addEventListener(REMOVE_FROM_WL_EVENT, this.wishlistAction);
+  }
+
+  render() {
+    return (
+      <div
+        className="header-counter"
+        onClick={() => {
+          alert(this.state.items);
+        }}
+      >
+        {this.state.itemCount > 0 ? (
+          <span className="qty">{this.state.itemCount}</span>
+        ) : (
+          <></>
+        )}
+        <i className="fas fa-heart icon"></i>
+      </div>
+    );
+  }
+}
+
 class HeaderCounters extends React.Component {
   render() {
-    return <CartCounter></CartCounter>;
+    return [
+      <CartCounter key={0}></CartCounter>,
+      <WishlistCounter key={1}></WishlistCounter>,
+    ];
   }
 }
 
