@@ -98,6 +98,7 @@ class AddToCartButton extends React.Component {
 
     this.state = {
       busy: false,
+      inCart: false,
     };
   }
 
@@ -117,20 +118,23 @@ class AddToCartButton extends React.Component {
 
       this.setState({
         busy: false,
+        inCart: !this.state.inCart,
       });
     }, 2000);
   };
 
   render() {
+    const productInCart = this.state.inCart;
+
     return (
       <button
         onClick={this.onClick}
         type="button"
-        title="Add to cart"
-        className="product-control"
+        title={`${productInCart ? 'Remove' : 'Add'} product to cart`}
+        className={`product-control ${productInCart ? 'in-cart' : ''}`}
         disabled={this.state.busy}
       >
-        Add to cart
+        {productInCart ? `Product ${this.props.productId}` : 'Add to cart'}
         {this.state.busy ? <i className="fas fa-spinner"></i> : <></>}
       </button>
     );
@@ -206,4 +210,5 @@ class HeaderCounters extends React.Component {
 }
 
 const headerCounters = document.querySelector('.header-counters');
-ReactDOM.createRoot(headerCounters).render(<HeaderCounters></HeaderCounters>);
+const root = ReactDOM.createRoot(headerCounters);
+root.render(<HeaderCounters></HeaderCounters>);

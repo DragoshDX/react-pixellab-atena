@@ -545,7 +545,8 @@ a {
   cursor: pointer;
 }
 
-.product-tile .product-control:hover {
+.product-tile .product-control:hover,
+.product-tile .product-control.in-cart {
   color: #fff;
   background-color: #ff6b6b;
 }
