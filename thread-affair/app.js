@@ -1,3 +1,5 @@
+const ADD_TO_CART_EVENT = 'cart/productAdded';
+
 class NewsletterForm extends React.Component {
   // state v1
   state = {
@@ -106,7 +108,7 @@ class AddToCartButton extends React.Component {
 
     setTimeout(() => {
       dispatchEvent(
-        new CustomEvent('cart/productAdded', {
+        new CustomEvent(ADD_TO_CART_EVENT, {
           detail: {
             productId: this.props.productId,
           },
@@ -146,3 +148,62 @@ productTileControls.forEach((productTileControl, index) => {
     <ProductTileControls productId={index}></ProductTileControls>,
   );
 });
+
+class CartCounter extends React.Component {
+  // never update state directly
+  state = {
+    cartItemsCount: 0,
+    cartItems: [], // array cu ids
+  };
+
+  productCartAction = (event) => {
+    const { detail, type: eventType } = event;
+    const { productId } = detail;
+    // no mutating state:
+    // slice clones
+    const cartItems = this.state.cartItems.slice();
+
+    switch (eventType) {
+      case ADD_TO_CART_EVENT:
+        // push mutates
+        cartItems.push(productId);
+        this.setState({
+          cartItems,
+          cartItemsCount: this.state.cartItemsCount + 1,
+        });
+        break;
+    }
+  };
+
+  componentDidMount() {
+    // DOM
+    addEventListener(ADD_TO_CART_EVENT, this.productCartAction);
+  }
+
+  render() {
+    return (
+      <div
+        className="header-cart"
+        onClick={() => {
+          alert(this.state.cartItems);
+        }}
+      >
+        {this.state.cartItemsCount > 0 ? (
+          <span className="cart-qty">{this.state.cartItemsCount}</span>
+        ) : (
+          <></>
+        )}
+        <i className="fas fa-shopping-cart icon"></i>
+      </div>
+    );
+  }
+}
+
+class HeaderCounters extends React.Component {
+  render() {
+    return <CartCounter></CartCounter>;
+  }
+}
+
+const headerCounters = document.querySelector('.header-counters');
+ReactDOM.createRoot(headerCounters).render(<HeaderCounters></HeaderCounters>);
